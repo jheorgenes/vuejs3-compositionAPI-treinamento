@@ -16,6 +16,12 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 npm install
 ```
 
+### Lodash /Debounce
+
+```sh
+npm i lodash
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
