@@ -1,21 +1,39 @@
 <template>
-  <h2 id="app-products">Products</h2>
-  <h2 id="my-app">Products my app</h2>
-
-  <h2>Product 1</h2>
-  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi repellendus tempore odio voluptates natus corrupti modi mollitia, veniam omnis laudantium est porro ab? Laborum ipsum repellat nesciunt quibusdam culpa. Sunt.</p>
-
-  <ProductInfo :likes="product.likes" :comments="product.comments" />
+  <!-- O argumento do slot: (v-slot="props") é chamado de 'props' por convenção, mas poderia receber qualquer nome -->
+  <!-- Esse v-slot permite ter acesso a propriedades que estão dentro do escopo do v-slot do componente chamado -->
+  <Products :products="products" v-slot="props">
+    <li @click="getProduct(props.product.id)">{{ props.product.name }}</li><!-- Aqui está sendo inserido cada propriedade recuperada do scopo do v-slot -->
+  </Products>
 </template>
 
 <script setup>
 import ProductInfo from '@/components/ProductInfo.vue';
+import Products from '@/components/Products.vue';
 import { reactive } from 'vue';
 
 const product = reactive({
   likes: 5,
   comments: 14
-})
+});
+
+const products = reactive([
+  {
+    id: 1,
+    name: 'Imac'
+  },
+  {
+    id: 2,
+    name: 'MackBoor'
+  },
+  {
+    id: 3,
+    name: 'Mouse'
+  },
+]);
+
+function getProduct(id) {
+  console.log(id);
+}
 </script>
 
 <style scoped>
