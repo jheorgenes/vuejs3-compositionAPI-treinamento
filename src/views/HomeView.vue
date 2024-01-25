@@ -1,33 +1,30 @@
 <template>
-  <h2>Admin</h2>
-
-  <ul>
-    <template v-for="(user, index) in users" :key="index">
-      <li v-if="user.is_Admin">{{ user.firstName }}</li>
-    </template>
-  </ul>
-
-  <h2>Not Admin</h2>
-
-  <ul>
-    <li v-for="(user, index) in usersNotAdmin" :key="index">{{ user.firstName }}</li>
-  </ul>
-
-  {{ countComputed }}
-  <button @click="computedCount++">Add computed</button>
+  <button @click="openModal = true">Modal</button>
   <br>
-  {{ countFunction() }}
-  <button @click="functionCount++">Add function</button>
+  <Modal v-if="openModal" @close="openModal = false">
+    <template #header>Header do Modal</template>
+    <template #default>
+      <form action="">
+        <input type="text" placeholder="Email">
+        <input type="text" placeholder="Senha">
+        <button>Login</button>
+      </form>
+    </template>
+    <template #footer>Footer do Modal</template>
+  </Modal>
 </template>
 
 <script setup>
 
 import { computed, reactive, ref } from 'vue';
+import Modal from '@/components/Modal.vue';
 
 const user = reactive({
     firstName: 'Alexandre',
     lastName: 'Cardoso'
 });
+
+const openModal = ref(false);
 
 const computedCount = ref(0);
 const functionCount = ref(0);
