@@ -27,14 +27,13 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 const users = reactive({ users: [] });
 const userSearch = ref('');
 const loading = ref(true);
-const searched = ref(false);
 
 const userNotFound = computed(() => {
   return (!loading.value && users['users'].data.length <= 0) ? '<span id="notFound">Nenhum usuário encontrado</span>' : '';
 });
 
 function handlePagination(page) {
-  return searched.value ? searchUser(page) : getUsers(page);
+  return userSearch.value ? searchUser(page) : getUsers(page);
 }
 
 async function getUsers(page = 1) {
@@ -60,12 +59,10 @@ async function searchUser(page = 1) {
     });
 
     if(!userSearch.value) {
-      searched.value = false;
       getUsers();
       return;
     }
     
-    searched.value = true;
     users['users'] = data;
   } catch (error) {
     console.log(error.response.data);
