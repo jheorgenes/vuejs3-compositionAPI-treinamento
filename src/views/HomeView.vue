@@ -1,82 +1,64 @@
 <template>
-  <input type="text" placeholder="Search" v-model="userSearch" @keyup="search">
-
+  <input type="text" v-model="user.firstName" placeholder="FirstName">
+  <input type="text" v-model="user.lastName" placeholder="LastName">
+  <hr>
   <ul>
-    <li v-for="(user, index) in users['users'].data" :key="index">{{ user.firstName }} {{ user.lastName }}</li>
+    <li v-for="(item, index) in items" :key="index">{{ item.name }} <input type="text" v-model="item.name"> </li>
   </ul>
-
-  <Bootstrap5Pagination :data="users['users']" @pagination-change-page="handlePagination" :limit="2" :show-disabled="true"  size="default" align="center">
-    <template #prev-nav>
-      <span>&lt; Anterior</span>
-    </template>
-    <template #next-nav>
-      <span>Próximo &gt;</span>
-    </template>
-  </Bootstrap5Pagination>
-
-  <div v-html="userNotFound"></div>
 </template>
 
 <script setup>
+import { ref, watch, reactive } from 'vue';
 
-import http from '@/services/http';
-import _ from 'lodash';
-import { onMounted, ref, reactive, computed } from 'vue';
-import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+const firstName = ref('');
+const lastName = ref('');
 
-const users = reactive({ users: [] });
-const userSearch = ref('');
-const loading = ref(true);
+// watch([firstName, lastName], ([valueFirstName, valueLastName], [oldValueFirstName, oldValueLastName]) => {
+//   console.log('new => ', valueFirstName);
+// });
 
-const userNotFound = computed(() => {
-  return (!loading.value && users['users'].data.length <= 0) ? '<span id="notFound">Nenhum usuário encontrado</span>' : '';
+// watch(lastName, (value, oldValue) => {
+//   console.log('new => ', value);
+//   console.log('old => ', oldValue);
+// });
+
+const user = reactive({
+  firstName: '',
+  lastName: ''
 });
 
-function handlePagination(page) {
-  return userSearch.value ? searchUser(page) : getUsers(page);
-}
-
-async function getUsers(page = 1) {
-  try {
-    const { data } = await http.get('/api/users?page='+Number(page));
-    users['users'] = data;
-    loading.value = false;
-  } catch (error) {
-    console.log(error.response.data);
+const items = reactive([
+  {
+    id: 1,
+    name: 'Alexandre'
+  },
+  {
+    id: 2,
+    name: 'João'
   }
-}
+]);
 
-onMounted(() => {
-  getUsers();
-});
+// watch(
+//   () => user.firstName, 
+//   (value, oldValue) => {
+//     console.log('new => '+ value);
+//     console.log('old => ' + oldValue);
+//   }
+// );
 
-async function searchUser(page = 1) {
-  try {
-    const { data } = await http.get('/api/users/search?page='+Number(page), {
-      params: {
-        user: userSearch.value
-      }
-    });
+// Observando um objeto completo
+// watch(user, (value) => {
+//   console.log(value);
+// });
 
-    if(!userSearch.value) {
-      getUsers();
-      return;
-    }
-    
-    users['users'] = data;
-  } catch (error) {
-    console.log(error.response.data);
-  }
-}
-
-const search = _.debounce(async () => {
-  searchUser();
-}, 1000);
+// Observando um array completo
+// watch(
+//   items, (value) => {
+//     value.forEach((item) => {
+//       if(!Number.isInteger(Number(item))){
+//         console.log('not a number ' + item.name);
+//       }
+//     });
+//   }
+// );
 </script>
-
-<style>
-#notFound {
-  color: red;
-}
-</style>
-
