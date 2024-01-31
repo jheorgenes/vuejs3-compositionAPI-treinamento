@@ -1,48 +1,28 @@
 <template>
-  <Currency type="text" v-model="dolar" placeholder="Dólar" :options="{ currency: 'USD' }" />
-  <hr>
-  <ul>
-    <li>{{ dolarTodayValue }}</li>
-    <li>{{ dolarToReaisValue }}</li>
-  </ul>
+  <button @click="showSomething">Show</button>
+
+  <input type="text" v-if="showElement" ref="inputElement">
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import http from '@/services/http';
-import format from '@/services/format';
-import Currency from '@/components/Currency.vue';
+import { nextTick, ref } from 'vue'
 
-const dolar = ref(0);
-const dolarToday = ref(0);
-const dolarToReal = ref(0);
+const showElement = ref(false);
+const inputElement = ref(null);
 
-const dolarToReaisValue = computed(() => {
-  return `O valor em reais de ${format(dolar.value, 'en-US', 'USD')} é: ${format(dolarToReal.value, 'pt-BR', 'BRL')}`
-});
+async function showSomething() {
+  showElement.value = true;
 
-const dolarTodayValue = computed(() => {
-  return `O dólar hoje está em: ${format(dolarToday.value, 'en-US', 'USD')}`;
-});
+  // setTimeout(() => {
+  //   console.log(inputElement.value);
+  // }, 1000);
 
-onMounted(async () => {
-  try {
-    const dolar = await getDolar();
-    dolarToday.value = dolar['high'];
-  } catch (error) {
-    console.log(error);
-  }
-})
+  await nextTick(() => {
+    inputElement.value.focus();
+    // console.log(inputElement.value);
+    console.log('focus');
+  })
 
-async function getDolar(typeCurrency = 'USD-BRL') {
-  const { data } = await http.get('https://economia.awesomeapi.com.br/json/last/' + typeCurrency);
-  const currency = typeCurrency.split('-').join('');
-  return data[currency];
+  console.log('carregou');
 }
-
-watch(dolar, (value) => {
-  console.log(value, Number(dolarToday.value));
-  dolarToReal.value = value * Number(dolarToday.value);
-  console.log(dolarToReal.value);
-})
 </script>
