@@ -6,6 +6,7 @@ export function useUsers () {
 
   onMounted(async () => {
     users['users'] = await getUsers();
+    console.log('onMounted no composable do user');
   });
 
   async function getUsers() {
@@ -18,6 +19,7 @@ export function useUsers () {
   }
 
   return {
-    users
+    users,
+    onMounted
   }
 }
