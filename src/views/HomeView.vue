@@ -1,22 +1,18 @@
 <template>
-  <button @click="increment">Add</button>
-  {{ count }}
+  <!-- <button @click="increment">Add</button> -->
+  <!-- <button @click="store.dispatch('increment')">Add</button> -->
+  <button @click="store.commit('increment')">Add</button>
+  {{ store.state.count }}
   <hr>
-  <ul>
-    <li v-for="(user, index) in users['users']" :key="index">{{ user.firstName }}</li>
-  </ul>
+  {{ store.getters.getCounter }}
 </template>
 
 <script setup>
+import { useStore } from 'vuex';
 
-import { useCount } from '@/composables/count.js';
-import { useUsers } from '@/composables/users.js';
-import { onMounted } from 'vue';
+const store = useStore();
 
-const { count, increment } = useCount();
-const { users } = useUsers();
-
-onMounted(() => {
-  console.log('onMounted no componenete do HomeView');
-})
+function increment() {
+  store.dispatch('increment');
+}
 </script>

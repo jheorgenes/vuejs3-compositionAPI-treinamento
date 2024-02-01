@@ -22,6 +22,18 @@ npm install
 npm i lodash
 ```
 
+### vue-currency-input
+
+```sh
+npm i vue-currency-input
+```
+
+### Vuex
+
+```sh
+npm i vuex
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
